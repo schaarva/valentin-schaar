@@ -1,10 +1,6 @@
-FROM nextcloud:latest
-
-ENV NEXTCLOUD_TRUSTED_DOMAINS="valentin-schaar.de"
+FROM mysql:latest
 
 ENV MYSQL_HOST=db
 ENV MYSQL_DATABASE=nextcloud
 ENV MYSQL_USER=nextcloud
 ENV MYSQL_PASSWORD="={NUE6_U;YDjXDr,_7?r"
-
-EXPOSE 80

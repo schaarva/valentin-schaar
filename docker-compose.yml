@@ -7,9 +7,24 @@ services:
       dockerfile: Dockerfile.proxy
     ports:
       - "80:80"
+    depends_on:
+      - cloud
 
   cloud:
     build:
       context: .
       dockerfile: Dockerfile.cloud
+    volumes:
+      - cloud_data:/var/www/html
+    depends_on:
+      - db
 
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+        - db_data:/var/lib/mysql
+
+volumes:
+  cloud_data:
+  db_data:
