@@ -1,1 +1,5 @@
 FROM nextcloud:latest
+
+ENV NEXTCLOUD_TRUSTED_DOMAINS="valentin-schaar.de"
+
+EXPOSE 80
