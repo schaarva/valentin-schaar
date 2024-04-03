@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "80:80"
+
+  cloud:
+    build:
+      context: .
+      dockerfile: Dockerfile.cloud
+
