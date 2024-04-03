@@ -1,6 +1,7 @@
 FROM nginx:latest
 
 COPY ./proxy/config/. /etc/nginx
-COPY ./proxy/public/. /usr/share/nginx
+#COPY ./proxy/public/. /usr/share/nginx
+COPY ./proxy/public/. /var/www
 
 EXPOSE 80
