@@ -22,7 +22,7 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	sever_name valentin-schaar.de;
+	server_name valentin-schaar.de;
 
 	# SSL configuration
 	#
