@@ -6,6 +6,7 @@ services:
 
   proxy:
     container_name: proxy
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.proxy
@@ -20,6 +21,7 @@ services:
 
   cert:
     container_name: cert
+    restart: unless-stopped
     image: certbot/certbot
     volumes:
       - ./cert/conf:/etc/letsencrypt
@@ -31,6 +33,7 @@ services:
 
   cloud:
     container_name: cloud
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.cloud
@@ -41,6 +44,7 @@ services:
 
   cloud_db:
     container_name: cloud_db
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.cloud_db
