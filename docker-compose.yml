@@ -24,7 +24,8 @@ services:
     volumes:
       - ./cert/conf:/etc/letsencrypt
       - ./cert/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email valentin.schaar@web.de -d valentin-schaar.de --agree-tos # --force-renewal
+    #command: certonly --webroot -w /var/www/certbot --email valentin.schaar@web.de -d valentin-schaar.de -d www.valentin-schaar.de -d cloud.valentin-schaar.de -d remote.valentin-schaar.de --agree-tos #--force-renewal
+    command: renew
 
   # Cloud storage
 
