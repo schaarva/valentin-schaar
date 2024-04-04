@@ -1,6 +1,8 @@
 FROM nextcloud:latest
 
-ENV NEXTCLOUD_TRUSTED_DOMAINS="valentin-schaar.de"
+ENV NEXTCLOUD_TRUSTED_DOMAINS="cloud.valentin-schaar.de"
+ENV NEXTCLOUD_ADMIN_USER="root"
+ENV NEXTCLOUD_ADMIN_PASSWORD="#y:=m];c%b\\Uau3,RX_?"
 
 ENV MYSQL_HOST=db
 ENV MYSQL_DATABASE=nextcloud
