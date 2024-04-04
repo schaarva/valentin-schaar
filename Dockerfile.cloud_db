@@ -1,0 +1,7 @@
+FROM mysql:latest
+
+ENV MYSQL_HOST=cloud_db
+ENV MYSQL_ROOT_PASSWORD="cn,-T6&#|QaLCd9.%$4z"
+ENV MYSQL_DATABASE=nextcloud
+ENV MYSQL_USER=nextcloud
+ENV MYSQL_PASSWORD="={NUE6_U;YDjXDr,_7?r"

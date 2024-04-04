@@ -1,7 +1,11 @@
 version: "3"
 
 services:
+
+  # Proxy and web page
+
   proxy:
+    container_name: proxy
     build:
       context: .
       dockerfile: Dockerfile.proxy
@@ -10,22 +14,26 @@ services:
     depends_on:
       - cloud
 
+  # Cloud storage
+
   cloud:
+    container_name: cloud
     build:
       context: .
       dockerfile: Dockerfile.cloud
     volumes:
       - cloud_data:/var/www/html
     depends_on:
-      - db
+      - cloud_db
 
-  db:
+  cloud_db:
+    container_name: cloud_db
     build:
       context: .
-      dockerfile: Dockerfile.db
+      dockerfile: Dockerfile.cloud_db
     volumes:
-        - db_data:/var/lib/mysql
+        - cloud_db_data:/var/lib/mysql
 
 volumes:
   cloud_data:
-  db_data:
+  cloud_db_data:
