@@ -1,7 +1,8 @@
-FROM mysql:latest
+FROM postgres:15.2-alpine
 
-ENV MYSQL_HOST=remote_db
-ENV MYSQL_ROOT_PASSWORD="s;-nX%,wtePQ+K7AS1xF"
-ENV MYSQL_DATABASE=guacamole
-ENV MYSQL_USER=guacamole
-ENV MYSQL_PASSWORD=",X3K#)ZtN1tYf\\%J#3D-"
+ENV PGDATA="/var/lib/postgresql/data/guacamole"
+ENV POSTGRES_DB=guacamole_db
+ENV POSTGRES_USER=guacamole_user
+ENV POSTGRES_PASSWORD="iePjcNNhvY8XqXPw74eK"
+
+COPY ./remote_db/ /docker-entrypoint-initdb.d/

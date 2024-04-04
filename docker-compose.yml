@@ -76,7 +76,8 @@ services:
       context: .
       dockerfile: Dockerfile.remote_db
     volumes:
-      - remote_db_data:/var/lib/mysql
+      - remote_db_data_data:/var/lib/postgresql/data:Z
+      - ./init:/docker-entrypoint-initdb.d:z
 
 
 volumes:
@@ -86,4 +87,5 @@ volumes:
   cloud_data:
   cloud_db_data:
 
-  remote_db_data:
+  remote_db_data_data:
+  remote_db_init_data:
