@@ -51,8 +51,39 @@ services:
     volumes:
         - cloud_db_data:/var/lib/mysql
 
+  # Remote desktop
+  
+  remote:
+    container_name: remote
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.remote
+    ports:
+      - 8080:8080
+    depends_on:
+      - remote_db
+      - remote_proxy
+
+  remote_proxy:
+    container_name: remote_proxy
+    image: guacamole/guacd
+
+  remote_db:
+    container_name: remote_db
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.remote_db
+    volumes:
+      - remote_db_data:/var/lib/mysql
+
+
 volumes:
   cert_conf_data:
   cert_www_data:
+
   cloud_data:
   cloud_db_data:
+
+  remote_db_data:

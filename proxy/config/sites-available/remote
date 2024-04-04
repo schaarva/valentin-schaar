@@ -4,9 +4,9 @@ server {
 	ssl_certificate /etc/letsencrypt/live/valentin-schaar.de/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/valentin-schaar.de/privkey.pem;
 
-	server_name cloud.valentin-schaar.de;
+	server_name remote.valentin-schaar.de;
 
 	location / {
-		proxy_pass http://cloud:80;
+		proxy_pass http://remote:8080;
 	}
 }

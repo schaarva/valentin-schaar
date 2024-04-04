@@ -1,0 +1,7 @@
+FROM mysql:latest
+
+ENV MYSQL_HOST=remote_db
+ENV MYSQL_ROOT_PASSWORD="s;-nX%,wtePQ+K7AS1xF"
+ENV MYSQL_DATABASE=guacamole
+ENV MYSQL_USER=guacamole
+ENV MYSQL_PASSWORD=",X3K#)ZtN1tYf\\%J#3D-"
