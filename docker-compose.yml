@@ -11,8 +11,20 @@ services:
       dockerfile: Dockerfile.proxy
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./cert/conf:/etc/letsencrypt
+      - ./cert/www:/var/www/certbot
     depends_on:
       - cloud
+
+  cert:
+    container_name: cert
+    image: certbot/certbot
+    volumes:
+      - ./cert/conf:/etc/letsencrypt
+      - ./cert/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --email valentin.schaar@web.de -d valentin-schaar.de --agree-tos # --force-renewal
 
   # Cloud storage
 
@@ -35,5 +47,7 @@ services:
         - cloud_db_data:/var/lib/mysql
 
 volumes:
+  cert_conf_data:
+  cert_www_data:
   cloud_data:
   cloud_db_data:
