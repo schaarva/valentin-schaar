@@ -1,91 +1,39 @@
-version: "3"
+version: '3'
 
 services:
-
-  # Proxy and web page
-
-  proxy:
-    container_name: proxy
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./cert/conf:/etc/letsencrypt
-      - ./cert/www:/var/www/certbot
-    depends_on:
-      - cloud
-
-  cert:
-    container_name: cert
-    restart: unless-stopped
-    image: certbot/certbot
-    volumes:
-      - ./cert/conf:/etc/letsencrypt
-      - ./cert/www:/var/www/certbot
-    #command: certonly --webroot -w /var/www/certbot --email valentin.schaar@web.de -d valentin-schaar.de -d www.valentin-schaar.de -d cloud.valentin-schaar.de -d remote.valentin-schaar.de --agree-tos #--force-renewal
-    command: renew
-
-  # Cloud storage
-
-  cloud:
-    container_name: cloud
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.cloud
-    volumes:
-      - cloud_data:/var/www/html
-    depends_on:
-      - cloud_db
-
-  cloud_db:
-    container_name: cloud_db
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.cloud_db
-    volumes:
-        - cloud_db_data:/var/lib/mysql
-
-  # Remote desktop
-  
-  remote:
-    container_name: remote
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.remote
-    ports:
-      - 8080:8080
-    depends_on:
-      - remote_db
-      - remote_proxy
-
   remote_proxy:
     container_name: remote_proxy
     image: guacamole/guacd
+    restart: always
 
   remote_db:
     container_name: remote_db
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.remote_db
+      #environment:
+      #PGDATA: /var/lib/postgresql/data/guacamole
+      #POSTGRES_DB: guacamole_db
+      #POSTGRES_PASSWORD: 'ChooseYourOwnPasswordHere1234'
+      #POSTGRES_USER: guacamole_user
+      #iimage: postgres:15.2-alpine
+    restart: always
     volumes:
-      - remote_db_data_data:/var/lib/postgresql/data:Z
-      - ./init:/docker-entrypoint-initdb.d:z
+      - ./remote_db:/docker-entrypoint-initdb.d:z
+      - remote_db_data:/var/lib/postgresql/data:Z
 
+  remote:
+    container_name: remote
+    depends_on:
+      - remote_proxy
+      - remote_db
+    environment:
+      GUACD_HOSTNAME: remote_proxy
+      POSTGRESQL_DATABASE: guacamole_db
+      POSTGRESQL_HOSTNAME: remote_db
+      POSTGRESQL_PASSWORD: 'ChooseYourOwnPasswordHere1234'
+      POSTGRESQL_USER: guacamole_user
+    image: guacamole/guacamole
+    ports:
+    - 8080:8080/tcp
+    restart: always
 
 volumes:
-  cert_conf_data:
-  cert_www_data:
-
-  cloud_data:
-  cloud_db_data:
-
-  remote_db_data_data:
-  remote_db_init_data:
+  remote_db_data:
