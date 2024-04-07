@@ -1,5 +1,0 @@
-FROM certbot/certbot:latest
-
-#COPY ./cert/conf/. /etc/letsencrypt/
-
-CMD certonly --non-interactive -d valentin-schaar.de -d www.valentin-schaar.de -d cloud.valentin-schaar.de -d remote.valentin-schaar.de --staging #--force-renewal
