@@ -2,35 +2,45 @@ version: "3"
 
 services:
 
-  # Proxy and web page
+  # Proxy
 
   proxy:
+    image: nginxproxy/nginx-proxy:alpine
     container_name: proxy
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.proxy
+    restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     volumes:
-      - cert_conf_data:/etc/letsencrypt
-      - cert_www_data:/var/www/certbot
-    depends_on:
-      - cloud
+      - proxy_vhost_data:/etc/nginx/vhost.d
+      - proxy_html_data:/usr/share/nginx/html
+      - proxy_certs_data:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+    - ENABLE_IPV6=true
 
-  cert:
-    container_name: cert
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.cert
-    depends_on:
+  proxy_acme:
+    image: nginxproxy/acme-companion
+    container_name: proxy_acme
+    volumes_from:
       - proxy
     volumes:
-      - cert_conf_data:/etc/letsencrypt
-      - cert_www_data:/var/www/certbot
+      - proxy_certs_data:/etc/nginx/certs:rw
+      - proxy_acme_data:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    #environment:
+      #- DEFAULT_EMAIL=valentin.schaar@web.de  # Optional
 
+  # Web
+  
+  web:
+    image: nginx
+    container_name: web
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=www.valentin-schaar.de,valentin-schaar.de
+      - LETSENCRYPT_HOST=www.valentin-schaar.de,valentin-schaar.de
+  
   # Cloud storage
 
   cloud:
@@ -43,6 +53,9 @@ services:
       - cloud_data:/var/www/html
     depends_on:
       - cloud_db
+    environment:
+      - VIRTUAL_HOST=cloud.valentin-schaar.de
+      - LETSENCRYPT_HOST=cloud.valentin-schaar.de
 
   cloud_db:
     container_name: cloud_db
@@ -55,34 +68,39 @@ services:
 
   # Remote desktop
   
-  remote_proxy:
-    container_name: remote_proxy
-    image: guacamole/guacd
-    restart: always
-
-  remote_db:
-    container_name: remote_db
-    build:
-      context: .
-      dockerfile: Dockerfile.remote_db
-    restart: always
-    volumes:
-      - remote_db_data:/var/lib/postgresql/data:Z
-
   remote:
     container_name: remote
+    restart: always
     depends_on:
       - remote_proxy
       - remote_db
     build:
       context: .
       dockerfile: Dockerfile.remote
+    environment:
+      - VIRTUAL_HOST=remote.valentin-schaar.de
+      - LETSENCRYPT_HOST=remote.valentin-schaar.de
+
+  remote_proxy:
+    container_name: remote_proxy
     restart: always
-  
+    image: guacamole/guacd
+
+  remote_db:
+    container_name: remote_db
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.remote_db
+    volumes:
+      - remote_db_data:/var/lib/postgresql/data:Z
+
 
 volumes:
-  cert_conf_data:
-  cert_www_data:
+  proxy_vhost_data:
+  proxy_html_data:
+  proxy_certs_data:
+  proxy_acme_data:
 
   cloud_data:
   cloud_db_data:
