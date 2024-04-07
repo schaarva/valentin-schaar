@@ -106,8 +106,10 @@ services:
     cap_add:
       - NET_ADMIN
     stop_grace_period: 2m
+    expose:
+      - 8006
     environment:
-      - VIRTAL_PORT=8006
+      - VIRTUAL_PORT=8006
       - VIRTUAL_HOST=windows.remote.valentin-schaar.de
       - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
     volumes:
