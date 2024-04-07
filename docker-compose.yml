@@ -29,6 +29,22 @@ services:
     command: certonly --webroot -w /var/www/certbot --non-interactive --agree-tos --register-unsafely-without-email -d valentin-schaar.de -d www.valentin-schaar.de -d cloud.valentin-schaar.de -d remote.valentin-schaar.de #--force-renewal
 
   # Cloud storage
+  
+  remote_windows:
+    container_name: remote_windows
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.remote_windows
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006 # For installation
+    stop_grace_period: 2m
+    volumes:
+      - remote_windows_data:/storage
 
   cloud:
     container_name: cloud
@@ -51,6 +67,7 @@ services:
         - cloud_db_data:/var/lib/mysql
 
   # Remote desktop
+
   
   remote_proxy:
     container_name: remote_proxy
@@ -75,7 +92,7 @@ services:
       context: .
       dockerfile: Dockerfile.remote
     restart: always
-  
+ 
 
 volumes:
   cert_conf_data:
@@ -84,4 +101,5 @@ volumes:
   cloud_data:
   cloud_db_data:
 
+  remote_windows_data:
   remote_db_data:

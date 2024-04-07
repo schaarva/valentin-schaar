@@ -1,0 +1,6 @@
+FROM dockurr/windows:latest
+
+ENV VERSION=win11
+ENV RAM_SIZE=4G
+ENV CPU_CORES=4
+ENV DISK_SIZE=128G
