@@ -1,0 +1,10 @@
+FROM guacamole/guacamole:latest
+
+ENV GUACD_HOSTNAME=remote_proxy
+
+ENV POSTGRESQL_HOSTNAME=remote_db
+ENV POSTGRESQL_DATABASE=guacamole_db
+ENV POSTGRESQL_USER=guacamole_user
+ENV POSTGRESQL_PASSWORD="iePjcNNhvY8XqXPw74eK"
+
+EXPOSE 8080

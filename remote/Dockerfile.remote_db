@@ -1,0 +1,7 @@
+FROM postgres:15.2-alpine
+
+ENV PGDATA="/var/lib/postgresql/data/guacamole"
+
+ENV POSTGRES_DB=guacamole_db
+ENV POSTGRES_USER=guacamole_user
+ENV POSTGRES_PASSWORD="iePjcNNhvY8XqXPw74eK"
