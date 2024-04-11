@@ -1,5 +1,10 @@
 version: "3.8"
 
+include:
+  - web.yml
+  - cloud.yml
+  - remote.yml
+
 services:
 
   # Proxy
@@ -31,99 +36,9 @@ services:
     #environment:
       #- DEFAULT_EMAIL=valentin.schaar@web.de  # Optional
 
-  # Web
-  
-  web:
-    image: nginx
-    container_name: web
-    restart: unless-stopped
-    environment:
-      - VIRTUAL_HOST=www.valentin-schaar.de,valentin-schaar.de
-      - LETSENCRYPT_HOST=www.valentin-schaar.de,valentin-schaar.de
-  
-  # Cloud storage
-
-  cloud:
-    container_name: cloud
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.cloud
-    volumes:
-      - cloud_data:/var/www/html
-    depends_on:
-      - cloud_db
-    environment:
-      - VIRTUAL_HOST=cloud.valentin-schaar.de
-      - LETSENCRYPT_HOST=cloud.valentin-schaar.de
-
-  cloud_db:
-    container_name: cloud_db
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.cloud_db
-    volumes:
-        - cloud_db_data:/var/lib/mysql
-
-  # Remote desktop
-  
-  remote:
-    container_name: remote
-    restart: always
-    depends_on:
-      - remote_proxy
-      - remote_db
-    build:
-      context: .
-      dockerfile: Dockerfile.remote
-    environment:
-      - VIRTUAL_HOST=remote.valentin-schaar.de
-      - LETSENCRYPT_HOST=remote.valentin-schaar.de
-
-  remote_proxy:
-    container_name: remote_proxy
-    restart: always
-    image: guacamole/guacd
-
-  remote_db:
-    container_name: remote_db
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile.remote_db
-    volumes:
-      - remote_db_data:/var/lib/postgresql/data:Z
-
-  remote_windows:
-    container_name: remote_windows
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.remote_windows
-    devices:
-      - /dev/kvm
-    cap_add:
-      - NET_ADMIN
-    stop_grace_period: 2m
-    expose:
-      - 8006
-    environment:
-      - VIRTUAL_PORT=8006
-      - VIRTUAL_HOST=windows.remote.valentin-schaar.de
-      - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
-    volumes:
-      - remote_windows_data:/storage
-
 
 volumes:
   proxy_vhost_data:
   proxy_html_data:
   proxy_certs_data:
   proxy_acme_data:
-
-  cloud_data:
-  cloud_db_data:
-
-  remote_db_data:
-  remote_windows_data:

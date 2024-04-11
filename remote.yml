@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+
+  # Remote desktop
+  
+  remote:
+    container_name: remote
+    restart: always
+    depends_on:
+      - remote_proxy
+      - remote_db
+    build:
+      context: .
+      dockerfile: Dockerfile.remote
+    environment:
+      - VIRTUAL_PATH=/guacamole
+      - VIRTUAL_DEST=/guacamole
+      - VIRTUAL_HOST=remote.valentin-schaar.de
+      - LETSENCRYPT_HOST=remote.valentin-schaar.de
+
+  remote_proxy:
+    container_name: remote_proxy
+    restart: always
+    image: guacamole/guacd
+
+  remote_db:
+    container_name: remote_db
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.remote_db
+    volumes:
+      - remote_db_data:/var/lib/postgresql/data:Z
+
+  remote_windows:
+    container_name: remote_windows
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.remote_windows
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    stop_grace_period: 2m
+    expose:
+      - 8006
+    environment:
+      - VIRTUAL_PORT=8006
+      - VIRTUAL_HOST=windows.remote.valentin-schaar.de
+      - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
+    volumes:
+      - remote_windows_data:/storage
+
+
+volumes:
+  remote_db_data:
+  remote_windows_data:
