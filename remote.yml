@@ -6,7 +6,7 @@ services:
   
   remote:
     container_name: remote
-    restart: always
+    restart: unless-stopped
     depends_on:
       - remote_proxy
       - remote_db
@@ -26,7 +26,7 @@ services:
 
   remote_db:
     container_name: remote_db
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.remote_db
@@ -36,10 +36,8 @@ services:
 
   remote_windows:
     container_name: remote_windows
+    image: dockurr/windows:latest
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.remote_windows
     devices:
       - /dev/kvm
     cap_add:
@@ -47,12 +45,17 @@ services:
     stop_grace_period: 2m
     expose:
       - 8006
+    volumes:
+      - remote_windows_data:/storage
     environment:
       - VIRTUAL_PORT=8006
       - VIRTUAL_HOST=windows.remote.valentin-schaar.de
       - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
-    volumes:
-      - remote_windows_data:/storage
+
+      - VERSION=win11
+      - RAM_SIZE=4G
+      - CPU_CORES=4
+      - DISK_SIZE=128G
 
 
 volumes:
