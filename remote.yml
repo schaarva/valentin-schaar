@@ -31,6 +31,7 @@ services:
       context: .
       dockerfile: Dockerfile.remote_db
     volumes:
+      - ./remote_db/:/docker-entrypoint-initdb.d:z
       - remote_db_data:/var/lib/postgresql/data:Z
 
   remote_windows:
