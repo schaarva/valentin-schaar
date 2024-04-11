@@ -4,34 +4,33 @@ services:
 
   # Cloud storage
   
+  cloud_db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - cloud_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_PASSWORD=123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
   cloud:
     image: nextcloud:latest
     restart: unless-stopped
+    links:
+      - cloud_db
     volumes:
       - cloud_data:/var/www/html
-    depends_on:
-      - cloud_db
     environment:
       - VIRTUAL_HOST=cloud.valentin-schaar.de
       - LETSENCRYPT_HOST=cloud.valentin-schaar.de
 
-      - POSTGRES_HOST=cloud_db
-      - POSTGRES_DB=nextcloud_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=testing123
-
-      - NEXTCLOUD_ADMIN_USER=root
-      - NEXTCLOUD_ADMIN_PASSWORD=root
-
-  cloud_db:
-    image: postgres:latest
-    restart: unless-stopped
-    volumes:
-      - cloud_db_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=nextcloud_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=testing123
+      - MYSQL_PASSWORD=123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=cloud_db
 
 
 volumes:
