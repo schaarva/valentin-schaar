@@ -1,7 +1,7 @@
 version: "3.8"
 
 include:
-  - web.yml
+  - ./web/docker-compose.yml
   - cloud.yml
   - remote.yml
 

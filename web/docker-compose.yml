@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+
+  # Web
+  
+  web:
+    image: nginx
+    container_name: web
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=www.valentin-schaar.de,valentin-schaar.de
+      - LETSENCRYPT_HOST=www.valentin-schaar.de,valentin-schaar.de
