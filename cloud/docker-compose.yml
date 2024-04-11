@@ -5,7 +5,6 @@ services:
   # Cloud storage
 
   cloud:
-    container_name: cloud
     restart: unless-stopped
     image: nextcloud:latest
     volumes:
@@ -29,7 +28,6 @@ services:
       - MYSQL_PASSWORD="={NUE6_U;YDjXDr,_7?r"
 
   cloud_db:
-    container_name: cloud_db
     restart: unless-stopped
     image: mysql:latest
     volumes:

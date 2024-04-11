@@ -5,7 +5,6 @@ services:
   # Remote desktop
   
   remote:
-    container_name: remote
     restart: unless-stopped
     depends_on:
       - remote_proxy
@@ -18,12 +17,10 @@ services:
       - LETSENCRYPT_HOST=remote.valentin-schaar.de
 
   remote_proxy:
-    container_name: remote_proxy
     restart: always
     image: guacamole/guacd
 
   remote_db:
-    container_name: remote_db
     restart: unless-stopped
     build:
       context: .
@@ -33,7 +30,6 @@ services:
       - remote_db_data:/var/lib/postgresql/data:Z
 
   remote_windows:
-    container_name: remote_windows
     image: dockurr/windows:latest
     restart: unless-stopped
     devices:

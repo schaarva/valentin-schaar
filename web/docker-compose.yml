@@ -6,7 +6,6 @@ services:
   
   web:
     image: nginx
-    container_name: web
     restart: unless-stopped
     environment:
       - VIRTUAL_HOST=www.valentin-schaar.de,valentin-schaar.de

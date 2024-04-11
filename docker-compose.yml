@@ -11,7 +11,6 @@ services:
 
   proxy:
     image: nginxproxy/nginx-proxy:alpine
-    container_name: proxy
     restart: always
     ports:
       - 80:80
@@ -26,7 +25,6 @@ services:
 
   proxy_acme:
     image: nginxproxy/acme-companion
-    container_name: proxy_acme
     volumes_from:
       - proxy
     volumes:
