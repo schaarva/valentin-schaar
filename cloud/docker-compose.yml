@@ -3,41 +3,35 @@ version: "3.8"
 services:
 
   # Cloud storage
-
+  
   cloud:
-    restart: unless-stopped
     image: nextcloud:latest
+    restart: unless-stopped
     volumes:
       - cloud_data:/var/www/html
-      #- ./config/:/var/www/html/config/:ro
     depends_on:
       - cloud_db
-    expose:
-      - 80
     environment:
       - VIRTUAL_HOST=cloud.valentin-schaar.de
       - LETSENCRYPT_HOST=cloud.valentin-schaar.de
 
-      - NEXTCLOUD_TRUSTED_DOMAINS=cloud.valentin-schaar.de,cloud,cloud_db,valentin-schaar.de
-      - NEXTCLOUD_ADMIN_USER="root"
-      - NEXTCLOUD_ADMIN_PASSWORD="#y:=m];c%b\\Uau3,RX_?"
+      - POSTGRES_HOST=cloud_db
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testing123
 
-      - MYSQL_HOST=cloud_db
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD="={NUE6_U;YDjXDr,_7?r"
+      - NEXTCLOUD_ADMIN_USER=root
+      - NEXTCLOUD_ADMIN_PASSWORD=root
 
   cloud_db:
+    image: postgres:latest
     restart: unless-stopped
-    image: mysql:latest
     volumes:
-        - cloud_db_data:/var/lib/mysql
+      - cloud_db_data:/var/lib/postgresql/data
     environment:
-      - MYSQL_ROOT_PASSWORD="cn,-T6&#|QaLCd9.%$4z"
-      - MYSQL_HOST=cloud_db
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD="={NUE6_U;YDjXDr,_7?r"
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testing123
 
 
 volumes:
