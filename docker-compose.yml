@@ -13,9 +13,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - proxy_vhost_data:/etc/nginx/vhost.d
-      - proxy_html_data:/usr/share/nginx/html
-      - proxy_certs_data:/etc/nginx/certs:ro
+      - proxy_vhost:/etc/nginx/vhost.d
+      - proxy_html:/usr/share/nginx/html
+      - proxy_certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - proxy
@@ -27,18 +27,18 @@ services:
     volumes_from:
       - proxy
     volumes:
-      - proxy_certs_data:/etc/nginx/certs:rw
-      - proxy_acme_data:/etc/acme.sh
+      - proxy_certs:/etc/nginx/certs:rw
+      - proxy_acme:/etc/acme.sh
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - proxy
 
 
 volumes:
-  proxy_vhost_data:
-  proxy_html_data:
-  proxy_certs_data:
-  proxy_acme_data:
+  proxy_vhost:
+  proxy_html:
+  proxy_certs:
+  proxy_acme:
 
 
 networks:

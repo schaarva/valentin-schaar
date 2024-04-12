@@ -7,7 +7,7 @@ services:
     links:
       - cloud_db
     volumes:
-      - cloud_data:/var/www/html
+      - cloud:/var/www/html
     networks:
       - proxy
       - cloud
@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     volumes:
-      - cloud_db_data:/var/lib/mysql
+      - cloud_db:/var/lib/mysql
     networks:
       - cloud
     environment:
@@ -36,8 +36,8 @@ services:
 
 
 volumes:
-  cloud_data:
-  cloud_db_data:
+  cloud:
+  cloud_db:
 
 
 networks:
