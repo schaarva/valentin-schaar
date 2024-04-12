@@ -12,6 +12,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.remote
+    networks:
+      - proxy
+      - remote
     environment:
       - VIRTUAL_HOST=remote.valentin-schaar.de
       - LETSENCRYPT_HOST=remote.valentin-schaar.de
@@ -19,12 +22,16 @@ services:
   remote_proxy:
     restart: always
     image: guacamole/guacd
+    networks:
+      - remote
 
   remote_db:
     restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.remote_db
+    networks:
+      - remote
     volumes:
       - ./remote_db/:/docker-entrypoint-initdb.d:z
       - remote_db_data:/var/lib/postgresql/data:Z
@@ -41,6 +48,8 @@ services:
       - 8006
     volumes:
       - remote_windows_data:/storage
+    networks:
+      - proxy
     environment:
       - VIRTUAL_PORT=8006
       - VIRTUAL_HOST=windows.remote.valentin-schaar.de
@@ -55,3 +64,7 @@ services:
 volumes:
   remote_db_data:
   remote_windows_data:
+
+
+networks:
+  remote:
