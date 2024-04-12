@@ -1,9 +1,6 @@
 version: "3.8"
 
 services:
-
-  # Web
-  
   web:
     image: nginx
     restart: unless-stopped
