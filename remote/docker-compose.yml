@@ -41,6 +41,8 @@ services:
     cap_add:
       - NET_ADMIN
     stop_grace_period: 2m
+    ports:
+      - 3389:3389
     expose:
       - 8006
     volumes:
@@ -53,8 +55,8 @@ services:
       - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
 
       - VERSION=win11
-      - RAM_SIZE=4G
-      - CPU_CORES=4
+      - RAM_SIZE=12G
+      - CPU_CORES=5
       - DISK_SIZE=128G
 
 
@@ -64,4 +66,5 @@ volumes:
 
 
 networks:
+  proxy:
   remote:
