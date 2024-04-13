@@ -17,16 +17,16 @@ services:
       - LETSENCRYPT_HOST=remote.valentin-schaar.de
 
   remote_proxy:
-    restart: always
     image: guacamole/guacd
+    restart: unless-stopped
     networks:
       - remote
 
   remote_db:
-    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.remote_db
+    restart: unless-stopped
     networks:
       - remote
     volumes:
