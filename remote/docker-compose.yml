@@ -4,7 +4,7 @@ services:
   remote:
     restart: unless-stopped
     depends_on:
-      - remote_proxy
+      - remote_daemon
       - remote_db
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       - VIRTUAL_HOST=remote.valentin-schaar.de
       - LETSENCRYPT_HOST=remote.valentin-schaar.de
 
-  remote_proxy:
+  remote_daemon:
     image: guacamole/guacd
     restart: unless-stopped
     networks:
