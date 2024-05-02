@@ -11,8 +11,8 @@ services:
     restart: unless-stopped
     command:
       - "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--api.dashboard=true"
+      #- "--api.insecure=true"
+      #- "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
 

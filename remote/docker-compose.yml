@@ -44,23 +44,22 @@ services:
     cap_add:
       - NET_ADMIN
     stop_grace_period: 2m
-    ports:
-      - 3389:3389
-    expose:
-      - 8006
+    #expose:
+      #- 8006
     volumes:
       - remote_windows:/storage
     networks:
       - proxy
     environment:
-      - VIRTUAL_PORT=8006
-      - VIRTUAL_HOST=windows.remote.valentin-schaar.de
-      - LETSENCRYPT_HOST=windows.remote.valentin-schaar.de
-
       - VERSION=win11
       - RAM_SIZE=12G
       - CPU_CORES=5
       - DISK_SIZE=128G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.remote_windows.rule=Host(`windows.remote.valentin-schaar.de`)"
+      - "traefik.http.routers.remote_windows.entrypoints=websecure"
+      - "traefik.http.routers.remote_windows.tls.certresolver=proxy_cert"
 
 
 volumes:
