@@ -7,40 +7,35 @@ include:
 
 services:
   proxy:
-    image: nginxproxy/nginx-proxy:alpine
+    image: traefik
     restart: unless-stopped
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+
+      - "--certificatesresolvers.proxy_cert.acme.tlschallenge=true"
+      - "--certificatesresolvers.proxy_cert.acme.email=valentin.schaar@web.de"
+      - "--certificatesresolvers.proxy_cert.acme.storage=/letsencrypt/acme.json"
+    networks:
+      - proxy
     ports:
-      - 80:80
       - 443:443
+      - 80:80
     volumes:
-      - proxy_vhost:/etc/nginx/vhost.d
-      - proxy_html:/usr/share/nginx/html
-      - proxy_certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      - proxy
-    environment:
-      - ENABLE_IPV6=true
-
-  proxy_acme:
-    image: nginxproxy/acme-companion
-    restart: unless-stopped
-    volumes_from:
-      - proxy
-    volumes:
-      - proxy_certs:/etc/nginx/certs:rw
-      - proxy_acme:/etc/acme.sh
+      - proxy_certs:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - proxy
-
 
 volumes:
-  proxy_vhost:
-  proxy_html:
   proxy_certs:
-  proxy_acme:
-
 
 networks:
   proxy:

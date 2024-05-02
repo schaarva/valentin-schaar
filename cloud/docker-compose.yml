@@ -12,13 +12,15 @@ services:
       - proxy
       - cloud
     environment:
-      - VIRTUAL_HOST=cloud.valentin-schaar.de
-      - LETSENCRYPT_HOST=cloud.valentin-schaar.de
-
       - MYSQL_PASSWORD=123
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=cloud_db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cloud.rule=Host(`cloud.valentin-schaar.de`)"
+      - "traefik.http.routers.cloud.entrypoints=websecure"
+      - "traefik.http.routers.cloud.tls.certresolver=proxy_cert"
   
   cloud_db:
     image: mariadb:10.6

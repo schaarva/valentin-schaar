@@ -12,9 +12,12 @@ services:
     networks:
       - proxy
       - remote
-    environment:
-      - VIRTUAL_HOST=remote.valentin-schaar.de
-      - LETSENCRYPT_HOST=remote.valentin-schaar.de
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.remote.rule=Host(`remote.valentin-schaar.de`)"
+      - "traefik.http.routers.remote.entrypoints=websecure"
+      - "traefik.http.routers.remote.tls.certresolver=proxy_cert"
+
 
   remote_daemon:
     image: guacamole/guacd
