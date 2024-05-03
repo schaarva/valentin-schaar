@@ -4,6 +4,7 @@ include:
   - ./web/docker-compose.yml
   - ./cloud/docker-compose.yml
   - ./remote/docker-compose.yml
+  - ./vpn/docker-compose.yml
 
 services:
   proxy:
